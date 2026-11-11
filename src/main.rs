@@ -32,7 +32,7 @@ fn vault_root() -> io::Result<PathBuf> {
         Err(_) => {
             return Err(io::Error::new(
                 io::ErrorKind::NotFound,
-                "home directory not set.",
+                "home directory not set",
             ));
         }
     };
