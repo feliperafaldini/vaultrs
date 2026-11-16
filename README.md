@@ -5,9 +5,9 @@
 A terminal browser for an Obsidian vault. Projects on the left, their notes in the
 middle, the note itself on the right — read-only, it never writes to the vault.
 
-**Status:** data layer done and tested. The terminal UI is still the ratatui counter
-template, which milestone 1 replaces with the project list. Nothing here is installed
-as a release yet.
+**Status:** milestone 1 done: the data layer and a navigable project list, both
+tested. Notes and the note pane (M2) are not there yet. Nothing here is installed as
+a release yet.
 
 ## What works today
 
@@ -28,14 +28,17 @@ prints one project name per line, sorted. The rules are the contract of the load
 - an empty root is an empty list, not an error;
 - ordering is deterministic: sorted by name, not by whatever the filesystem returns.
 
-With `--dump` absent the binary starts the TUI, which for now is the counter template.
+With `--dump` absent the binary starts the TUI: the same project list in a bordered
+pane, `j`/`k` or the arrow keys move the selection (clamped at both ends, no
+wrap-around), `q` quits. The vault is loaded before the terminal switches modes, so a
+missing root fails with a plain error instead of a blank screen.
 
 ## Build and run
 
 ```console
 cargo run -- --dump   # data layer, no terminal modes involved
-cargo run             # TUI: counter template, q quits
-cargo test            # 6 tests: 2 unit, 4 integration
+cargo run             # TUI: project list, j/k/arrows move, q quits
+cargo test            # 11 tests: 7 unit, 4 integration
 ```
 
 Rust stable, no toolchain pin. Developed on CachyOS (Arch) with rustc 1.99; nothing in
@@ -47,6 +50,8 @@ the code is platform specific beyond `$HOME`.
 |---|---|
 | `src/model.rs` | `Project { name, path }` |
 | `src/data.rs` | the only module that touches the disk |
+| `src/app.rs` | `App`: project list, selection and quit state; no terminal, unit-tested |
+| `src/ui.rs` | `draw(frame, &app)`: renders `App` with ratatui, nothing else |
 | `src/main.rs` | the edge: `$HOME` resolution, `--dump`, terminal loop |
 | `tests/load_projects.rs` | integration suite over `tests/fixtures/projetos/` |
 
@@ -66,7 +71,7 @@ The target layout, once the list exists:
 └────────────────┴──────────────────────┴────────────────────────────────┘
 ```
 
-- **M1** — navigable project list: `j`/`k`/arrows with clamp, `q` quits, `App` and `ui`
+- **M1** (done) — navigable project list: `j`/`k`/arrows with clamp, `q` quits, `App` and `ui`
   split out of `main.rs`, selection tested without a terminal.
 - **M2** — note list per project, line-based markdown rendering (`#`, code fences,
   `-`, `[[wikilinks]]`), no markdown crate.
