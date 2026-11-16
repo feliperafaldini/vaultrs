@@ -1,5 +1,7 @@
 # vaultrs
 
+[![ci](https://github.com/feliperafaldini/vaultrs/actions/workflows/ci.yml/badge.svg)](https://github.com/feliperafaldini/vaultrs/actions/workflows/ci.yml)
+
 A terminal browser for an Obsidian vault. Projects on the left, their notes in the
 middle, the note itself on the right — read-only, it never writes to the vault.
 
@@ -82,3 +84,7 @@ timeline without leaving the keyboard.
 
 `vaultrs` on crates.io is the HashiCorp Vault client — unrelated. This repository keeps
 the name locally; publishing would need a different crate name (`vault-tui` is free).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
